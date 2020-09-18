@@ -266,6 +266,13 @@ KeyMap::mapKey(Keystrokes& keys, KeyID id, SInt32 group,
 {
     LOG((CLOG_DEBUG1 "mapKey %04x (%d) with mask %04x, start state: %04x", id, id, desiredMask, currentState));
 
+    if (id == kKeyHangul) {
+        // From Windows BarrierServer, type3 keyboard hangul (shift+space) encoded to kKeyHangul,
+        // For (only) MAC OSX BarrierClient cannot process kKeyhangul, kKeyHangul map to "shift+space" forcefully
+        desiredMask |= KeyModifierShift;
+        id = 0x0020;
+    }
+
     // handle group change
     if (id == kKeyNextGroup) {
         keys.push_back(Keystroke(1, false, false));
